@@ -1,0 +1,31 @@
+#"https://docs.gspread.org/en/latest/index.html"
+#create aproject in google cloud console
+#enable google drive API 'where the excel sheet is stored'
+#enable google sheets API
+#share the file withe the service acount
+#get the credential in json file
+import gspread 
+from google.oauth2.service_account import Credentials
+
+scopes = [
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive'
+]
+credentials_json='XXXXXX.jsom'
+credentials = Credentials.from_service_account_file(
+   credentials_json,
+    scopes=scopes
+)
+
+gc = gspread.authorize(credentials)
+#####################
+#now you ready to access google sheet
+sh = gc.open("python")
+#create work sheet
+worksheet = sh.add_worksheet(title="Retail", rows=525470, cols=10)
+#Try your connection
+val = worksheet.acell('B1').value
+#after preprocess your file with Pandas ,load it to gogle sheet
+import pandas as pd
+
+worksheet.update([df.columns.values.tolist()] + df.values.tolist())
